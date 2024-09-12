@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 import connectToDB from './db/index.js';
 import waitlist from './db/model.js';
 import cors from 'cors';
+import axios from 'axios';
+import gql from 'graphql-tag';
+import { print } from 'graphql';
 const app = express();
 
 app.use(express.json());
