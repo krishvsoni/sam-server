@@ -31,7 +31,61 @@ app.post('/api/waitlist', async (req, res) => {
         res.status(500).send('Error adding to waitlist');
     }
 });
+app.post('/getProcesses', async (req, res) => {
+  const { address } = req.body;
 
+
+  const query = gql`
+      query {
+        transactions(
+          owners: "${address}", 
+          tags: [{ name: "Data-Protocol", values: ["ao"] }, { name: "Type", values: ["Process"] }],
+          first: 999
+        ) {
+          edges {
+            node {
+              id
+              tags {
+                name
+                value
+              }
+            }
+          }
+        }
+      }
+    `;
+
+  try {
+    const response = await axios.post(
+      'https://arweave-search.goldsky.com/graphql',
+      {
+        query: print(query),
+      },
+      {
+        headers: {
+          'accept': 'application/graphql-response+json, application/graphql+json, application/json, text/event-stream, multipart/mixed',
+          'accept-language': 'en-US,en;q=0.9',
+          'content-type': 'application/json',
+          'origin': 'https://www.ao.link',
+          'priority': 'u=1, i',
+          'referer': 'https://www.ao.link/',
+          'sec-ch-ua': '"Opera";v="111", "Chromium";v="125", "Not.A/Brand";v="24"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Windows"',
+          'sec-fetch-dest': 'empty',
+          'sec-fetch-mode': 'cors',
+          'sec-fetch-site': 'cross-site',
+          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 OPR/111.0.0.0'
+        }
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error making the request');
+  }
+});
 
 app.listen(PORT, () => {
     console.log('Server listening on port 3000');
