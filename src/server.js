@@ -83,7 +83,7 @@ app.post('/getProcesses', async (req, res) => {
       }
     );
 
-    res.json(response.data);
+    res.json(response.data.data.transactions);
   } catch (error) {
     console.error(error);
     res.status(500).send('Error making the request');
