@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import connectToDB from './db/index.js';
 import waitlist from './db/model.js';
 import cors from 'cors';
