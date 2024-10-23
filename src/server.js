@@ -5,6 +5,7 @@ import cors from 'cors';
 import axios from 'axios';
 import gql from 'graphql-tag';
 import { print } from 'graphql';
+import router from './importRepo.js';
 const app = express();
 
 app.use(express.json());
@@ -16,9 +17,12 @@ connectToDB();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.send('Welcome to SAM API');
+    res.send('Welcome to SENTIO API');
 
 });
+
+app.use('/api/github',router)
+
 app.post('/api/waitlist', async (req, res) => {
     const { name, email } = req.body;
     try {
