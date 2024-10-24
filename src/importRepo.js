@@ -2,12 +2,11 @@ import { stringify } from 'qs';
 import { Router } from 'express';
 import axios from 'axios';
 // import bodyParser from 'body-parser';
-
+import { config } from 'dotenv';
+config();
 const router = Router();
-
-const clientId = 'Ov23li9yd222KkA5HpSF';
-const clientSecret = 'ffa76a2eeb3c1206970fd4ce49751573bc2df7a6';
-
+const clientId = process.env.GITHUB_CLIENT_ID;
+const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 
 router.post('/exchange-code', async (req, res) => {
   const { code } = req.body;
