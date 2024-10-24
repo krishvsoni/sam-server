@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors(
-    'https://sam-v1.vercel.app/',
+    'https://sam-v1.vercel.app/','http://localhost:5173','https://sentio-app.ar-io.dev/','http://localhost:5173/offchain?code=',
 ));
 connectToDB();
 

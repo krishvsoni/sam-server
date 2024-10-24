@@ -1,34 +1,43 @@
 import { stringify } from 'qs';
 import { Router } from 'express';
 import axios from 'axios';
-import bodyParser from 'body-parser';
+// import bodyParser from 'body-parser';
 
 const router = Router();
 
-const clientId = process.env.GITHUB_CLIENT_ID;
-const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+const clientId = 'Ov23li9yd222KkA5HpSF';
+const clientSecret = 'ffa76a2eeb3c1206970fd4ce49751573bc2df7a6';
 
 
 router.post('/exchange-code', async (req, res) => {
-    const { code } = req.body;
-    const clientId = process.env.GITHUB_CLIENT_ID;
-    const clientSecret = process.env.GITHUB_CLIENT_SECRET;
-  
-    try {
-      const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
-        client_id: clientId,
-        client_secret: clientSecret,
-        code,
-      }, {
-        headers: { 'Accept': 'application/json' },
-      });
-  
-      res.json({ access_token: tokenResponse.data.access_token });
-    } catch (error) {
-      res.status(500).json({ error: 'Error exchanging code for access token' });
+  const { code } = req.body;
+
+  if (!code) {
+    return res.status(400).json({ error: 'Missing code parameter' });
+  }
+
+  try {
+    const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', stringify({
+      client_id: clientId,
+      client_secret: clientSecret,
+      code,
+    }), {
+      headers: { 'Accept': 'application/json' },
+    });
+
+    if (tokenResponse.data.error) {
+      return res.status(400).json({ error: tokenResponse.data.error });
     }
+
+    res.json({ access_token: tokenResponse.data.access_token });
+  } catch (error) {
+    console.error('Error exchanging code for access token:', error);
+    res.status(500).json({ error: 'Error exchanging code for access token' });
+  }
 });
 
+console.log(clientId)
+console.log(clientSecret)
 
 // const isValidPath = (path) => {
 //     return /\.(lua|luanb)$/.test(path);
