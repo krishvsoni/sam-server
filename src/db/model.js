@@ -8,6 +8,11 @@ var waitlistSchema = new Schema({
        unique: true
     }
 });
+var SentinelSchema = new Schema({
+    targetProcess: String,
+    sentinelProcessId: String,
+});
 
 var Waitlist = mongoose.model("Waitlist", waitlistSchema);
-module.exports = Waitlist;
+var Sentinel = mongoose.model("SentinelSchema", SentinelSchema);
+module.exports = { Waitlist, Sentinel }; ;
