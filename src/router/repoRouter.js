@@ -1,12 +1,18 @@
-import { stringify } from 'qs';
-import { Router } from 'express';
-import axios from 'axios';
-// import bodyParser from 'body-parser';
-import { config } from 'dotenv';
-config();
+const { stringify } = require('qs');
+const { Router } = require('express');
+const axios = require('axios');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const router = Router();
+
+// Access the variables
 const clientId = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+
+console.log("GitHub Client ID:", clientId);
+console.log("GitHub Client Secret:", clientSecret);
 
 router.post('/exchange-code', async (req, res) => {
   const { code } = req.body;
@@ -34,9 +40,6 @@ router.post('/exchange-code', async (req, res) => {
     res.status(500).json({ error: 'Error exchanging code for access token' });
   }
 });
-
-console.log(clientId)
-console.log(clientSecret)
 
 // const isValidPath = (path) => {
 //     return /\.(lua|luanb)$/.test(path);
@@ -100,4 +103,4 @@ console.log(clientSecret)
 //     }
 // });
 
-export default router;
+module.exports = router;
