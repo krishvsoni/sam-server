@@ -19,11 +19,7 @@ async function spawnprocess(cronValue) {
     return processId;
 }
 
-
-
-
-
-async function sendCode(processId,targetId,tagArray) {
+async function sendCode(processId, targetId, tagArray) {
     const messageId = await message({
         process: processId,
         signer: createDataItemSigner(wallet),
@@ -33,8 +29,13 @@ async function sendCode(processId,targetId,tagArray) {
             { name: "Action", value: "Eval" }
         ],
         data: `
-local tags = {${tagArray.map(tag => `"${tag}"`).join(',')}}
-local result = {}
+        local tags = {${tagArray.map(tag => `"${tag}"`).join(',')}}
+        local result = {}
+        Handlers.add("Sender",{Action="Cron"},{
+        function(msg)
+        Send{Target="${targetId}",Action="RequestMessages"}
+        end
+        })
 
 Handlers.add("S1",{Action="Cron"},{
 Send{Target="${targetId}",Action="RequestMessages"}
@@ -72,5 +73,14 @@ end)
     console.log('✔️ Message sent:', messageId);
     return messageId;
 }
+async function monitorProcess(processId) {
+    console.log('✔️ Monitoring process');
+    const monitorId = await monitor({
+        process: processId,
+        signer: createDataItemSigner(wallet),
+    });
+    console.log('✔️ Process monitored:', monitorId);
+    return monitorId;
+}
 
-module.exports = { spawnprocess, sendCode };
+module.exports = { spawnprocess, sendCode, monitorProcess };
