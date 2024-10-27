@@ -1,6 +1,6 @@
 const express = require('express');
 const axios = require('axios');
-const { spawnprocess, sendCode, monitorProcess } = require('../processServices');
+const { spawnprocess, sendCode, monitorProcess, askAirdrop } = require('../processServices');
 const { Sentinel } = require('../db/model');
 const { monitor } = require('@permaweb/aoconnect');
 require('dotenv').config()
@@ -38,5 +38,10 @@ processRouter.post('/monitorProcess',async(req,res)=>{
     const {processId} = req.body
     const monitorId = await monitorProcess(processId)
     res.json({monitorId})
+})
+processRouter.post('/airdrop',async(req,res)=>{
+    const {walletid}= req.body
+    const mid=await askAirdrop(walletid);
+    res.json({mid})
 })
 module.exports = processRouter
