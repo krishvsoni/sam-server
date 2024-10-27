@@ -1,9 +1,19 @@
 require('dotenv').config()
 const { createDataItemSigner, spawn, result, message, monitor, unmonitor } = require('@permaweb/aoconnect');
 const fs = require('fs');
-console.log(process.env)
+const Arweave = require('arweave');
+const path = require('path');
+
+
+const arweave = Arweave.init({
+    host: 'arweave.net',
+    port: 443,
+    protocol: 'https',
+});
+
 const wallet = JSON.parse(fs.readFileSync('./wallet.json', 'utf8'));
-console.log(wallet)
+
+
 async function spawnprocess(cronValue) {
     console.log('✔️ Spawning process');
     const processId = await spawn({
@@ -83,4 +93,39 @@ async function monitorProcess(processId) {
     return monitorId;
 }
 
-module.exports = { spawnprocess, sendCode, monitorProcess };
+
+async function uploadToArweave(req, res) {
+    try {
+        const reportFile = req.files?.report;
+        if (!reportFile) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        const pdfData = await fs.readFile(reportFile.tempFilePath);
+
+        const transaction = await arweave.createTransaction({ data: pdfData });
+
+        transaction.addTag('Content-Type', 'application/pdf');
+        transaction.addTag('App-Name', 'Audit Report');
+
+        const walletKey = JSON.parse(await fs.readFile(path.join(__dirname, wallet)));
+        await arweave.transactions.sign(transaction, walletKey);
+
+        const response = await arweave.transactions.post(transaction);
+
+        if (response.status === 200) {
+            return res.status(200).send({
+                message: 'Audit Report uploaded to Arweave successfully!',
+                transactionId: transaction.id,
+                url: `https://arweave.net/${transaction.id}`,
+            });
+        } else {
+            return res.status(500).send({ message: 'Failed to upload Audit Report to Arweave.' });
+        }
+    } catch (error) {
+        console.error('Error uploading PDF to Arweave:', error);
+        res.status(500).send({ message: 'An error occurred while uploading to Arweave.' });
+    }
+}
+
+module.exports = { spawnprocess, sendCode, monitorProcess, uploadToArweave };

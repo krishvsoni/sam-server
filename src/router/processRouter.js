@@ -3,6 +3,7 @@ const axios = require('axios');
 const { spawnprocess, sendCode, monitorProcess } = require('../processServices');
 const { Sentinel } = require('../db/model');
 const { monitor } = require('@permaweb/aoconnect');
+const { uploadToArweave } = require('../processServices');
 require('dotenv').config()
 
 const processRouter = express.Router();
@@ -39,4 +40,7 @@ processRouter.post('/monitorProcess',async(req,res)=>{
     const monitorId = await monitorProcess(processId)
     res.json({monitorId})
 })
+
+processRouter.post('/uploadToArweave', uploadToArweave)
+
 module.exports = processRouter
