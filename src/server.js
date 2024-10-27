@@ -18,7 +18,7 @@ connectToDB();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.send('Welcome to SENTIO API');
+  res.json('welcome to sentio engine');
 
 });
 

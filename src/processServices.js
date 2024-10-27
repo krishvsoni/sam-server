@@ -1,9 +1,19 @@
 require('dotenv').config()
 const { createDataItemSigner, spawn, result, message, monitor, unmonitor } = require('@permaweb/aoconnect');
 const fs = require('fs');
-console.log(process.env)
+const Arweave = require('arweave');
+const path = require('path');
+
+
+const arweave = Arweave.init({
+    host: 'arweave.net',
+    port: 443,
+    protocol: 'https',
+});
+
 const wallet = JSON.parse(fs.readFileSync('./wallet.json', 'utf8'));
-console.log(wallet)
+
+
 async function spawnprocess(cronValue) {
     console.log('✔️ Spawning process');
     const processId = await spawn({
@@ -12,7 +22,6 @@ async function spawnprocess(cronValue) {
         signer: createDataItemSigner(wallet),
         tags: [
             { name: "Cron-Interval", value: cronValue },
-            // value of cron will be dynamically set by the user
         ],
         data: "Spawn a process to run a cron job",
     });
@@ -83,18 +92,5 @@ async function monitorProcess(processId) {
     console.log('✔️ Process monitored:', monitorId);
     return monitorId;
 }
-async function askAirdrop(walletid) {
-    const mid=await message({
-        process: "XpkGwkMXPYdvCNZaw1xAF7BitrAPOQUStSqG6tL-NRQ",
-        signer: createDataItemSigner(wallet),
-        tags: 
-        [
-            {name:"Action",value:"tSENTI-drop"},
-            {name:"Recipient",value:walletid}
-        ],
-        data:`Airdropping to ${walletid}`
-    })
-    return mid;
-}
 
-module.exports = { spawnprocess, sendCode, monitorProcess, askAirdrop };
+module.exports = { spawnprocess, sendCode, monitorProcess };

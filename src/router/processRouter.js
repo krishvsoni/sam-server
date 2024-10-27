@@ -3,6 +3,7 @@ const axios = require('axios');
 const { spawnprocess, sendCode, monitorProcess, askAirdrop } = require('../processServices');
 const { Sentinel } = require('../db/model');
 const { monitor } = require('@permaweb/aoconnect');
+const { uploadToArweave } = require('../processServices');
 require('dotenv').config()
 
 const processRouter = express.Router();
@@ -44,4 +45,7 @@ processRouter.post('/airdrop',async(req,res)=>{
     const mid=await askAirdrop(walletid);
     res.json({mid})
 })
+
+processRouter.post('/uploadToArweave', uploadToArweave)
+
 module.exports = processRouter

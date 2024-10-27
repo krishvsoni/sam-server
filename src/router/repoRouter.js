@@ -11,8 +11,6 @@ const router = Router();
 const clientId = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 
-console.log("GitHub Client ID:", clientId);
-console.log("GitHub Client Secret:", clientSecret);
 
 router.post('/exchange-code', async (req, res) => {
   const { code } = req.body;
