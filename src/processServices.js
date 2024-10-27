@@ -12,7 +12,6 @@ async function spawnprocess(cronValue) {
         signer: createDataItemSigner(wallet),
         tags: [
             { name: "Cron-Interval", value: cronValue },
-            // value of cron will be dynamically set by the user
         ],
         data: "Spawn a process to run a cron job",
     });
