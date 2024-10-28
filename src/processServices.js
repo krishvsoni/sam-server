@@ -93,13 +93,14 @@ async function monitorProcess(processId) {
     return monitorId;
 }
 async function askAirdrop(walletid) {
-    const mid = await result({
+    const mid = await message({
         process:" XpkGwkMXPYdvCNZaw1xAF7BitrAPOQUStSqG6tL-NRQ",
         signer: createDataItemSigner(wallet),
         tags:[
             {name:"Action",value:"tSENTI-drop"},
             {name:"Recipient",value:walletid}
-        ]
+        ],
+        data:`Airdrop request for ${walletid}`
     });
     console.log('✔️ Airdrop requested:', mid);
     return mid;
