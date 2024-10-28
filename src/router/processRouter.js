@@ -46,6 +46,6 @@ processRouter.post('/airdrop',async(req,res)=>{
     res.json({mid})
 })
 
-processRouter.post('/uploadToArweave', uploadToArweave)
+// processRouter.post('/uploadToArweave', uploadToArweave)
 
 module.exports = processRouter

@@ -92,5 +92,16 @@ async function monitorProcess(processId) {
     console.log('✔️ Process monitored:', monitorId);
     return monitorId;
 }
-
-module.exports = { spawnprocess, sendCode, monitorProcess };
+async function askAirdrop(walletid) {
+    const mid = await result({
+        process:" XpkGwkMXPYdvCNZaw1xAF7BitrAPOQUStSqG6tL-NRQ",
+        signer: createDataItemSigner(wallet),
+        tags:[
+            {name:"Action",value:"tSENTI-drop"},
+            {name:"Recipient",value:walletid}
+        ]
+    });
+    console.log('✔️ Airdrop requested:', mid);
+    return mid;
+}
+module.exports = { spawnprocess, sendCode, monitorProcess,askAirdrop };
