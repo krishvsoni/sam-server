@@ -41,6 +41,36 @@ processRouter.post('/monitorProcess',async(req,res)=>{
     res.json({monitorId})
 })
 
-processRouter.post('/uploadToArweave', uploadToArweave)
+processRouter.post('/uploadToArweave', async (req, res) => {
+    try {
+        const reportFile = req.files?.report;
+        if (!reportFile) {
+            return res.status(400).send('No file uploaded.');
+        }
 
+        const pdfData = await fs.readFile(reportFile.tempFilePath);
+
+        const transaction = await arweave.createTransaction({ data: pdfData });
+        transaction.addTag('Content-Type', 'application/pdf');
+        transaction.addTag('App-Name', 'Audit Report');
+
+        const walletKey = JSON.parse(await fs.readFile(path.join(__dirname, 'wallet.json')));
+        await arweave.transactions.sign(transaction, walletKey);
+
+        const response = await arweave.transactions.post(transaction);
+
+        if (response.status === 200) {
+            return res.status(200).send({
+                message: 'Audit Report uploaded to Arweave successfully!',
+                transactionId: transaction.id,
+                url: `https://arweave.net/${transaction.id}`,
+            });
+        } else {
+            return res.status(500).send({ message: 'Failed to upload Audit Report to Arweave.' });
+        }
+    } catch (error) {
+        console.error('Error uploading PDF to Arweave:', error);
+        res.status(500).send({ message: 'An error occurred while uploading to Arweave.' , error});
+    }
+});
 module.exports = processRouter
