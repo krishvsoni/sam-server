@@ -93,4 +93,19 @@ async function monitorProcess(processId) {
     return monitorId;
 }
 
-module.exports = { spawnprocess, sendCode, monitorProcess };
+
+async function askAirdrop(walletid) {
+    const mid = await message({
+        process:" XpkGwkMXPYdvCNZaw1xAF7BitrAPOQUStSqG6tL-NRQ",
+        signer: createDataItemSigner(wallet),
+        tags:[
+            {name:"Action",value:"tSENTI-drop"},
+            {name:"Recipient",value:walletid}
+        ],
+        data:`Airdrop request for ${walletid}`
+    });
+    console.log('✔️ Airdrop requested:', mid);
+    return mid;
+}
+
+module.exports = { spawnprocess, sendCode, monitorProcess , askAirdrop};
