@@ -11,33 +11,35 @@ const app = express();
 
 app.use(express.json());
 app.use(cors(
-  'https://sam-v1.vercel.app/','http://localhost:5173','https://sentio-app.ar-io.dev/','http://localhost:5173/offchain?code=',
+  'https://sam-v1.vercel.app/','http://localhost:5173','https://sentio-app.ar-io.dev/','https://sentio.vercel.app','http://localhost:5173/offchain?code=',
 ));
 connectToDB();
 
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.json('welcome to sentio engine');
+  res.json('dumdum to sentio engine');
 
 });
 
 app.use('/api/github',router)
 app.use('/api/process',processRouter)
-app.post('/api/waitlist', async (req, res) => {
-  const { name, email } = req.body;
-  try {
-    const existingEmail = await waitlist.findOne({ email });
-    if (existingEmail) {
-      return res.status(400).send('Email already exists in waitlist');
-    }
-    await waitlist.create({ name, email });
-    res.status(201).send('Added to waitlist');
-  } catch (error) {
-    console.error('Error adding to waitlist:', error);
-    res.status(500).send('Error adding to waitlist');
-  }
-});
+
+// app.post('/api/waitlist', async (req, res) => {
+//   const { name, email } = req.body;
+//   try {
+//     const existingEmail = await waitlist.findOne({ email });
+//     if (existingEmail) {
+//       return res.status(400).send('Email already exists in waitlist');
+//     }
+//     await waitlist.create({ name, email });
+//     res.status(201).send('Added to waitlist');
+//   } catch (error) {
+//     console.error('Error adding to waitlist:', error);
+//     res.status(500).send('Error adding to waitlist');
+//   }
+// });
+
 app.post('/getProcesses', async (req, res) => {
   const { address } = req.body;
 

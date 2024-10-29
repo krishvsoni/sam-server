@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
+require('dotenv').config()
 
 const connectToDB = async () => {
     try {
-        await mongoose.connect("mongodb+srv://krishsoni:2203031050659@paytm.aujjoys.mongodb.net/SAMv1", {
+        await mongoose.connect(process.env.DB_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
-            socketTimeoutMS: 45000, // Adjust socket timeout based on your needs
+            serverSelectionTimeoutMS: 30000, 
+            socketTimeoutMS: 45000, 
         });
         console.log('Connected to SentioDB');
     } catch (error) {

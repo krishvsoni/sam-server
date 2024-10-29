@@ -7,7 +7,6 @@ dotenv.config();
 
 const router = Router();
 
-// Access the variables
 const clientId = process.env.GITHUB_CLIENT_ID;
 const clientSecret = process.env.GITHUB_CLIENT_SECRET;
 

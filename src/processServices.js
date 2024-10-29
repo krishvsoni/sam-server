@@ -105,4 +105,4 @@ async function askAirdrop(walletid) {
     console.log('✔️ Airdrop requested:', mid);
     return mid;
 }
-module.exports = { spawnprocess, sendCode, monitorProcess,askAirdrop };
+module.exports = { spawnprocess, sendCode, monitorProcess,askAirdrop, monitor, unmonitor };
