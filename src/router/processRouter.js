@@ -47,6 +47,15 @@ processRouter.post('/airdrop',async(req,res)=>{
     const mid=await askAirdrop(walletid);
     res.json({mid})
 })
+processRouter.post('/getSentinel',async(req,res)=>{
+    const {targetProcess} = req.body
+    const sentinel = await Sentinel.findOne({ targetProcess: targetProcess })
+    if (!sentinel) {
+        res.status(404).json({ error: "Sentinel not found" })
+        return;
+    }
+    res.json({sid:sentinel.sentinelProcessId})
+})
 
 // processRouter.post('/uploadToArweave', uploadToArweave)
 

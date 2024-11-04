@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const connectToDB = async () => {
     try {
-        await mongoose.connect(process.env.DB_URL, {
+        await mongoose.connect(process.env.DB_URL||"mongodb+srv://krishsoni:2203031050659@paytm.aujjoys.mongodb.net/SAM", {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 30000, 

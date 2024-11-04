@@ -22,6 +22,7 @@ async function spawnprocess(cronValue) {
         signer: createDataItemSigner(wallet),
         tags: [
             { name: "Cron-Interval", value: cronValue },
+            {name:"Cron-Tag-Action",value:"Cron"}
         ],
         data: "Spawn a process to run a cron job",
     });
@@ -35,49 +36,47 @@ async function sendCode(processId, targetId, tagArray) {
         signer: createDataItemSigner(wallet),
 
         tags: [
-            { name: "By the way", value: "I am a tag" },
+            { name: "Sentinel", value: "MESSAGE" },
             { name: "Action", value: "Eval" }
         ],
         data: `
         local tags = {${tagArray.map(tag => `"${tag}"`).join(',')}}
         local result = {}
         Handlers.add("Sender",{Action="Cron"},{
-        function(msg)
-        Send{Target="${targetId}",Action="RequestMessages"}
+            function(msg)
+            Send{Target="${targetId}",Action="RequestMessages"}
         end
         })
 
-Handlers.add("S1",{Action="Cron"},{
-Send{Target="${targetId}",Action="RequestMessages"}
-})
-Handlers.add("S2", {Action = "Analyze"},
-function(msg)
-    -- Iterate through the Data array
-    for i = 1, #msg.Data do
-        local tagArray = msg.Data[i].TagArray
-        local from = msg.Data[i].From
-        local id = msg.Data[i].Id
-        
-        -- Check each entry in TagArray
-        for j = 1, #tagArray do
-            -- Compare each tag name in tagArray with tags in the local tags list
-            for k = 1, #tags do
-                if tagArray[j].name == tags[k] then
-                    print("Vulnerable tag found: " .. tags[k])
-                    print("From: " .. from .. ", ID: " .. id)
-                    
-                    -- Add to result table
-                    table.insert(result, {
-                        vulnerable_tag = tags[k],
-                        from = from,
-                        id = id
-                    })
+        Handlers.add("S1", {Action = "Analyze"},
+            function(msg)
+        -- Iterate through the Data array
+        for i = 1, #msg.Data do
+            local tagArray = msg.Data[i].TagArray
+            local from = msg.Data[i].From
+            local id = msg.Data[i].Id
+            
+            -- Check each entry in TagArray
+            for j = 1, #tagArray do
+                -- Compare each tag name in tagArray with tags in the local tags list
+                for k = 1, #tags do
+                    if tagArray[j].name == tags[k] then
+                        print("Vulnerable tag found: " .. tags[k])
+                        print("From: " .. from .. ", ID: " .. id)
+                        
+                        -- Add to result table
+                        table.insert(result, {
+                            vulnerable_tag = tags[k],
+                            from = from,
+                            id = id
+                        })
+                    end
                 end
             end
         end
-    end
-	Send({Target=${targetId},Data=result,Action="ResultResponse"})
-end)
+        Send({Target=ao.id,Data=result,Action="ResultResponse"})
+        
+    end)
  `,
     });
     console.log('✔️ Message sent:', messageId);
