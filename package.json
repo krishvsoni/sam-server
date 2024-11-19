@@ -4,7 +4,10 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "build-image": "node scripts/build-image.js",
+    "push-image": "node scripts/push-image.js"
+
   },
   "keywords": [],
   "author": "",
