@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const qs = require('qs');
 const axios = require('axios');
-const createWebhook = require('./hook');
+const createWebhook = require('../hooks/hook');
 const cors = require('cors');
 require('dotenv').config();
 const hookRouter=express.Router();
