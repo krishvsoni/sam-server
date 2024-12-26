@@ -7,13 +7,13 @@
     "start": "node src/server.js",
     "build-image": "node scripts/build-image.js",
     "push-image": "node scripts/push-image.js"
-
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@permaweb/aoconnect": "^0.0.59",
+    "ardrive-core-js": "^2.0.7",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
