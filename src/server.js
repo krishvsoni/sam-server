@@ -7,6 +7,7 @@ const gql = require('graphql-tag');
 const { print } = require('graphql');
 const router = require('./router/repoRouter.js');
 const processRouter = require('./router/processRouter.js');
+const arDriveRouter = require('./router/ar-driveRouter.js');
 const hookRouter = require('./router/hookRouter.js');
 const app = express();
 
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 app.use('/api/github',router)
 app.use('/api/process',processRouter)
 app.use('/api/hook',hookRouter)
+app.use('/api/ardrive',arDriveRouter)
 // app.post('/api/waitlist', async (req, res) => {
 //   const { name, email } = req.body;
 //   try {
